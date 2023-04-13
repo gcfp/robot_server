@@ -1,116 +1,70 @@
-# Create a program that automates the movement of the rasptank robot and using the ultrasonic sensor to detect obstacles and avoid them.
+# Create an automated program that will run the following steps:
+# Go forward 1 meter
+# Turn 90 degrees to the right
+# Go backwards 1 meter
 
 # Import the necessary libraries
-import RPi.GPIO as GPIO
 import time
-import sys
+import RPi.GPIO as GPIO
 
-# Set the GPIO mode to BCM
+# Set the GPIO numbering mode
 GPIO.setmode(GPIO.BCM)
 
-# Set the GPIO pins for the ultrasonic sensor
-TRIG = 23
-ECHO = 24
+# Set the GPIO pins for the motor
+Motor1A = 4
+Motor1B = 17
+Motor1E = 27
 
-# Set the GPIO pins for the motors
-IN1 = 17
-IN2 = 27
-IN3 = 22
-IN4 = 10
+Motor2A = 14
+Motor2B = 15
+Motor2E = 18
 
-# Set the GPIO pins for the ultrasonic sensor
-GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
+# Set the GPIO pins as output
+GPIO.setup(Motor1A,GPIO.OUT)
+GPIO.setup(Motor1B,GPIO.OUT)
+GPIO.setup(Motor1E,GPIO.OUT)
 
-# Set the GPIO pins for the motors
-GPIO.setup(IN1, GPIO.OUT)
-GPIO.setup(IN2, GPIO.OUT)
-GPIO.setup(IN3, GPIO.OUT)
-GPIO.setup(IN4, GPIO.OUT)
+GPIO.setup(Motor2A,GPIO.OUT)
+GPIO.setup(Motor2B,GPIO.OUT)
+GPIO.setup(Motor2E,GPIO.OUT)
 
-# Set the GPIO pins for the ultrasonic sensor
-GPIO.output(TRIG, False)
-
-# Set the GPIO pins for the motors
-GPIO.output(IN1, False)
-GPIO.output(IN2, False)
-GPIO.output(IN3, False)
-GPIO.output(IN4, False)
-
-# Set the GPIO pins for the ultrasonic sensor
-time.sleep(2)
-
-# Set the GPIO pins for the motors
-time.sleep(2)
-
-# Set the GPIO pins for the ultrasonic sensor
-def distance():
-    GPIO.output(TRIG, True)
-    time.sleep(0.00001)
-    GPIO.output(TRIG, False)
-    while GPIO.input(ECHO) == 0:
-        pulse_start = time.time()
-    while GPIO.input(ECHO) == 1:
-        pulse_end = time.time()
-    pulse_duration = pulse_end - pulse_start
-    distance = pulse_duration * 17150
-    distance = round(distance, 2)
-    return distance
-
-# Set the GPIO pins for the motors
+# Define the functions for the motor
 def forward():
-    GPIO.output(IN1, True)
-    GPIO.output(IN2, False)
-    GPIO.output(IN3, True)
-    GPIO.output(IN4, False)
+    GPIO.output(Motor1A,GPIO.HIGH)
+    GPIO.output(Motor1B,GPIO.LOW)
+    GPIO.output(Motor1E,GPIO.HIGH)
 
-# Set the GPIO pins for the ultrasonic sensor
-def backward():
-    GPIO.output(IN1, False)
-    GPIO.output(IN2, True)
-    GPIO.output(IN3, False)
-    GPIO.output(IN4, True)
+    GPIO.output(Motor2A,GPIO.HIGH)
+    GPIO.output(Motor2B,GPIO.LOW)
+    GPIO.output(Motor2E,GPIO.HIGH)
 
-# Set the GPIO pins for the motors
-def left():
-    GPIO.output(IN1, False)
-    GPIO.output(IN2, True)
-    GPIO.output(IN3, True)
-    GPIO.output(IN4, False)
+def reverse():
+    GPIO.output(Motor1A,GPIO.LOW)
+    GPIO.output(Motor1B,GPIO.HIGH)
+    GPIO.output(Motor1E,GPIO.HIGH)
 
-# Set the GPIO pins for the ultrasonic sensor
-def right():
-    GPIO.output(IN1, True)
-    GPIO.output(IN2, False)
-    GPIO.output(IN3, False)
-    GPIO.output(IN4, True)
+    GPIO.output(Motor2A,GPIO.LOW)
+    GPIO.output(Motor2B,GPIO.HIGH)
+    GPIO.output(Motor2E,GPIO.HIGH)
 
-# Set the GPIO pins for the motors
+def turnLeft():
+    GPIO.output(Motor1A,GPIO.LOW)
+    GPIO.output(Motor1B,GPIO.HIGH)
+    GPIO.output(Motor1E,GPIO.HIGH)
+
+    GPIO.output(Motor2A,GPIO.HIGH)
+    GPIO.output(Motor2B,GPIO.LOW)
+    GPIO.output(Motor2E,GPIO.HIGH)
+
+def turnRight():
+    GPIO.output(Motor1A,GPIO.HIGH)
+    GPIO.output(Motor1B,GPIO.LOW)
+    GPIO.output(Motor1E,GPIO.HIGH)
+
+    GPIO.output(Motor2A,GPIO.LOW)
+    GPIO.output(Motor2B,GPIO.HIGH)
+    GPIO.output(Motor2E,GPIO.HIGH)
+
 def stop():
-    GPIO.output(IN1, False)
-    GPIO.output(IN2, False)
-    GPIO.output(IN3, False)
-    GPIO.output(IN4, False)
-
-# Set the GPIO pins for the ultrasonic sensor
-def main():
-    try:
-        while True:
-            dist = distance()
-            print "Distance:", dist, "cm"
-            if dist > 30:
-                forward()
-            elif dist <= 30:
-                stop()
-                time.sleep(1)
-                left()
-                time.sleep(1)
-                stop()
-                time.sleep(1)
-    except KeyboardInterrupt:
-        GPIO.cleanup()
-        sys.exit()
-
-# Set the GPIO pins for the motors
-if __name__ == '__main__':
-    main()
+    GPIO.output(Motor1E,GPIO.LOW)
+    GPIO.output(Motor2E,GPIO.LOW)

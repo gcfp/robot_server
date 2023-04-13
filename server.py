@@ -23,6 +23,7 @@ import psutil
 import servo
 import LED
 import findline
+import program
 
 step_set = 1
 speed_set = 100
@@ -41,6 +42,8 @@ ultrasonicMode = 0
 FindLineMode = 0
 FindColorMode = 0
 
+def app_ctrl_program():
+    
 
 def app_ctrl():
     app_HOST = ''
@@ -54,6 +57,67 @@ def app_ctrl():
 
     def setup():
         move.setup()
+
+    def programa():
+            # Run the program
+        program.forward()
+        program.time.sleep(1)
+        program.stop()
+        program.turnRight()
+        program.time.sleep(1)
+        program.stop()
+        program.reverse()
+        program.time.sleep(1)
+        program.stop()
+
+        # Reset the GPIO pins
+        program.GPIO.cleanup()
+    
+    def loop():
+        while True:
+            programa()
+            time.sleep(0.1)
+
+    def destroy():
+        move.destroy()
+
+    if __name__ == '__main__':
+        setup()
+        try:
+            loop()
+        except KeyboardInterrupt:
+            destroy()
+
+    def appLinkUp():
+        global new_frame
+        while True:
+            if new_frame == 1:
+                new_frame = 0
+                break
+            time.sleep(0.01)
+
+    def appLinkDown():
+        global new_frame
+        while True:
+            if new_frame == 0:
+                new_frame = 1
+                break
+            time.sleep(0.01)
+
+    def appLink():
+        while True:
+            appLinkUp()
+            appLinkDown()
+
+    def appRecv():
+        global direction_command, turn_command, pos_input, catch_input, cir_input, ultrasonicMode, FindLineMode, FindColorMode
+        while True:
+            data_input = AppSerSock.recv(app_BUFSIZ)
+            if not data_input:
+                break
+            else:
+                print(data_input)
+                appCommand(data_input)
 
     def appCommand(data_input):
         global direction_command, turn_command, pos_input, catch_input, cir_input
